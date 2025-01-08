@@ -1,15 +1,19 @@
 from flask import Flask, request, jsonify, render_template
-import joblib
+import pickle
 import pandas as pd
 import numpy as np
 
 app = Flask(__name__)
 
-# Load the model using joblib
-model = joblib.load('car_model.pkl')
+try:
+    with open('car_model.pkl', 'rb') as f:
+        data = pickle.load(f)
+except EOFError:
+    print("The file is empty or corrupted.")
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    
     data = request.json
 
     # Extracting the input data from the incoming JSON request
